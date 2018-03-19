@@ -12,12 +12,11 @@ with open('dataset.txt', 'r') as f:
 print lNumbers
 
 # Spark Setup
-
 conf = SparkConf().setAppName('Preliminaries')
 sc = SparkContext(conf=conf)
 
 # Create a parallel collection
 dNumbers = sc.parallelize(lNumbers)
 
-sumOfSquares = dNumbers.map(lambda s: s^2).reduce(lambda a, b: a + b)
-#print "The sum of squares is" + sumOfSquares
+sumOfSquares = dNumbers.map(lambda x: x*x).reduce(lambda x, y: x+y)
+print 'The sum of squares:', sumOfSquares
