@@ -13,7 +13,7 @@ print("The locally loaded list of numbers is: ", lNumbers)
 
 # Spark Setup
 
-conf = SparkConf().setAppName('Somma di quadrati').setMaster('local')
+conf = SparkConf().setAppName('Sum of squares').setMaster('local')
 sc = SparkContext(conf=conf)
 
 # Create a parallel collection
