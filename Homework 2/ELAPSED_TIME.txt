@@ -1,0 +1,16 @@
+ELAPSED TIME:
+============================================
+WORDCOUNT 1
+		|| GUGIO'S MAC 	|| HEKTOR'S MAC	|| LINCIO'S PC 	|| DRAKE'S PC 	||
+GUGIO	 	|| 41.70 s	||		||		||		||
+HECTOR 		|| 394.60 s	||		||		||		||
+LINCIO		||		||		||		||		||
+DRAKE		||		||		||		||		||
+
+============================================
+WORDCOUNT 2
+		|| GUGIO'S MAC 	|| HEKTOR'S MAC	|| LINCIO'S PC 	|| DRAKE'S PC 	||
+GUGIO	 	|| 		||		||		||		||
+HECTOR 		|| 		||		||		||		||
+LINCIO		||		||		||		||		||
+DRAKE		||		||		||		||		||
