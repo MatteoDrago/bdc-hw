@@ -1,16 +1,24 @@
 ELAPSED TIME:
-============================================
+====================================================================================================
 WORDCOUNT 1
-		|| GUGIO'S MAC 2-cores	|| HEKTOR'S MAC	|| LINCIO'S PC 	|| DRAKE'S PC 	||
-GUGIO	 	|| 38.54 s		||		||		||		||
-HECTOR 		|| 394.60 s		||		||		||		||
-LINCIO		||			||		||		||		||
-DRAKE		||			||		||		||		||
+		|| GUGIO'S MAC 2-cores	|| HEKTOR'S MAC	2-cores || LINCIO'S PC 	|| DRAKE'S PC 	||
+GUGIO	 	|| 38.54 s		||			||		||		||
+HECTOR 		|| 394.60 s		||			||		||		||
+LINCIO		||			||			||		||		||
+DRAKE		||			||			||		||		||
 
-============================================
+====================================================================================================
 WORDCOUNT 2
-		|| GUGIO'S MAC 2-cores  || HEKTOR'S MAC	|| LINCIO'S PC 	|| DRAKE'S PC 	||
-GUGIO	 	|| 129.82 s		||		||		||		||
-HECTOR 		|| 			||		||		||		||
-LINCIO		||			||		||		||		||
-DRAKE		||			||		||		||		||
+		|| GUGIO'S MAC 2-cores  || HEKTOR'S MAC	2-cores|| LINCIO'S PC 	|| DRAKE'S PC 	||
+GUGIO	 	|| 129.82 s		||			||		||		||
+HECTOR 		|| 			||			||		||		||
+LINCIO		||			||			||		||		||
+DRAKE		||			||			||		||		||
+
+====================================================================================================
+WORDCOUNT reduceByKey
+		|| GUGIO'S MAC 2-cores  || HEKTOR'S MAC	2-cores || LINCIO'S PC 	|| DRAKE'S PC 	||
+GUGIO	 	|| 40.05 s		||			||		||		||
+HECTOR 		|| 			||			||		||		||
+LINCIO		||			||			||		||		||
+DRAKE		||			||			||		||		||
