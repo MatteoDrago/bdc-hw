@@ -1,4 +1,4 @@
-# Import the Packeges
+# Import the Packages
 import numpy as np
 import time
 from pyspark import SparkConf, SparkContext
