@@ -53,29 +53,15 @@ print
 # Improved WordCount 2
 def f3(document, N) :
     words = document.split(' ')
+    n_partitions = int(np.floor(np.sqrt(N)))
     pairs_dict = {}
-    
-    # Compute c_i(w) in D_i
+
     for word in words:
         if word not in pairs_dict.keys():
             pairs_dict[word] = 1
         else :
             pairs_dict[word] += 1
-            
-    # Get the Partitions
-    n_partitions = int(np.floor(np.sqrt(N)))
-    pairs_dict_part = {i : [] for i in range(n_partitions)}
-    
-    seeds = range(len(words))
-    idx = 0
-    for key in pairs_dict.keys() :
-        np.random.seed(seed=seeds[idx])
-        x = np.random.randint(n_partitions)
-        pairs_dict_part[x].append((key, pairs_dict[key]))
-        idx = idx + 1
-    
-    return [(key, pairs_dict_part[key][i]) for key in pairs_dict_part.keys() 
-                                           for i in range(len(pairs_dict_part[key]))]
+    return [(np.random.randint(n_partitions), (key, pairs_dict[key])) for key in pairs_dict.keys()]
 
 def f4(x):
     pairs = list(x[1])
@@ -90,7 +76,6 @@ def f4(x):
                 pairs_dict[word] += c
             
     return [(key, pairs_dict[key]) for key in pairs_dict.keys()]
-
 
 wordcount_2 = docs.flatMap(lambda document : f3(document, N_words)) \
                         .groupByKey() \
