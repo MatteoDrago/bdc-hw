@@ -2,13 +2,14 @@
 import numpy as np
 import time
 from pyspark import SparkConf, SparkContext
-
+import sys
 
 config = SparkConf().setAppName('Homework 2').setMaster('local[*]')
 sc = SparkContext(conf=config)
 
 # Load the Dataset
-docs = sc.textFile('text-sample.txt').repartition(8)
+filename = sys.argv[-1]
+docs = sc.textFile(filename).repartition(8)
 N_documents = docs.count()
 N_words = docs.flatMap(lambda document: document.split(' ')).count()
 
