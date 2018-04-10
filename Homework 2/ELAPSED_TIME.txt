@@ -9,7 +9,7 @@ DRAKE		||			||			||		||	21.36 s	||
 
 ====================================================================================================
 WORDCOUNT 2
-		|| GUGIO'S MAC 2-cores  || HEKTOR'S MAC	2-cores|| LINCIO'S PC 	|| DRAKE'S PC 	||
+		|| GUGIO'S MAC 2-cores  || HEKTOR'S MAC	2-cores || LINCIO'S PC 	|| DRAKE'S PC 	||
 GUGIO	 	|| 129.82 s		||			||		||	38.90 s	||
 HECTOR 		|| 			||			||		||		||
 LINCIO		||			||			||		||		||
