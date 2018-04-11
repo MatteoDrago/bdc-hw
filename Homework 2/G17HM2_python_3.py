@@ -112,9 +112,9 @@ print()
 
 # Get the K-Most Frequent Words
 K = input('DIGIT K TO RETURN THE K-MOST FREQUENT WORDS :')
-MFW_1 = wordcount_1.takeOrdered(int(K), lambda value: -1 * value)
-MFW_2 = wordcount_2.takeOrdered(int(K), lambda value: -1 * value)
-MFW_1_r = wordcount_1_r.takeOrdered(int(K), lambda value: -1 * value)
+MFW_1 = wordcount_1.takeOrdered(int(K), key = lambda value: -value[1])
+MFW_2 = wordcount_2.takeOrdered(int(K), key = lambda value: -value[1])
+MFW_1_r = wordcount_1_r.takeOrdered(int(K), key = lambda value: -value[1])
 
 # Print the Most Frequent Words
 print('IMPROVED WORDCOUNT 1 MOST FREQUENT WORDS:')
