@@ -9,7 +9,7 @@ sc = SparkContext(conf=config)
 
 # Load the Dataset
 filename = sys.argv[-1]
-docs = sc.textFile(filename).repartition(8)
+docs = sc.textFile(filename).cache()
 N_documents = docs.count()
 N_words = docs.flatMap(lambda document: document.split(' ')).count()
 
@@ -51,37 +51,30 @@ print('Elapsed Time :', t1-t0, 's')
 print()
 
 # Improved WordCount 2
-def f3(document, N) :
-    words = document.split(' ')
-    n_partitions = int(np.floor(np.sqrt(N)))
-    pairs_dict = {}
-
-    for word in words:
-        if word not in pairs_dict.keys():
-            pairs_dict[word] = 1
-        else :
-            pairs_dict[word] += 1
-    return [(np.random.randint(n_partitions), (key, pairs_dict[key])) for key in pairs_dict.keys()]
-
-def f4(x):
-    pairs = list(x[1])
-    pairs_dict = {}
+def f3(document):
+    dictionary = {}
+    partitions = np.floor(np.sqrt(N_words)) - 1
+    for word in document.split(' '):
+        if word in dictionary.keys():
+            dictionary[word] += 1
+        else:
+            dictionary[word] = 1
+    return [(np.random.randint(partitions), (k,dictionary[k])) for k in dictionary.keys()]
     
-    for pair in pairs:
-        word, c = pair
-        if word!=None:
-            if word not in pairs_dict.keys():
-                pairs_dict[word] = c
-            else :
-                pairs_dict[word] += c
-            
+def f4(document):
+    pairs_dict = {}
+    for pair in list(document[1]):
+        word, count = pair
+        if word in pairs_dict.keys():
+            pairs_dict[word] += count
+        else:
+            pairs_dict[word] = count
     return [(key, pairs_dict[key]) for key in pairs_dict.keys()]
 
-
-wordcount_2 = docs.flatMap(lambda document : f3(document, N_words)) \
-                        .groupByKey() \
-                        .flatMap(f4) \
-                        .reduceByKey(lambda accum, n : accum + n)
+wordcount_2 = docs.flatMap(f3)\
+                .groupByKey()\
+                .flatMap(f4)\
+                .reduceByKey(lambda a,b: a+b)
 
 t0 = time.time()
 n_dif_words = wordcount_2.count()
