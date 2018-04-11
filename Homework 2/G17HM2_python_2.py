@@ -9,7 +9,7 @@ sc = SparkContext(conf=config)
 
 # Load the Dataset
 filename = sys.argv[-1]
-docs = sc.textFile(filename).repartition(8)
+docs = sc.textFile(filename).cache()
 N_documents = docs.count()
 N_words = docs.flatMap(lambda document: document.split(' ')).count()
 
