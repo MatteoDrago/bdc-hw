@@ -118,10 +118,10 @@ print('Elapsed Time :', t1-t0, 's')
 print()
 
 # Get the K-Most Frequent Words
-K = input('DIGIT K TO RETURN THE K-MOST FREQUENT WORDS :')
-MFW_1 = wordcount_1.takeOrdered(K, lambda (key, value): -1 * value)
-MFW_2 = wordcount_2.takeOrdered(K, lambda (key, value): -1 * value)
-MFW_1_r = wordcount_1_r.takeOrdered(K, lambda (key, value): -1 * value)
+K = int(input('DIGIT K TO RETURN THE K-MOST FREQUENT WORDS :'))
+MFW_1 = wordcount_1.takeOrdered(K, lambda key, value: -1 * value)
+MFW_2 = wordcount_2.takeOrdered(K, lambda key, value: -1 * value)
+MFW_1_r = wordcount_1_r.takeOrdered(K, lambda key, value: -1 * value)
 
 # Print the Most Frequent Words
 print('IMPROVED WORDCOUNT 1 MOST FREQUENT WORDS:')
