@@ -52,8 +52,8 @@ def kmeansPP(P, k):
     dist_near_center = [Vectors.squared_distance(P[i], S[0]) for i in range(len(P))]
 
     for i in range(k-1):    
-        sum_dist = sum([d**2 for d in dist_near_center])
-        probs = [d**2 / sum_dist for d in dist_near_center]
+        sum_dist = sum([d for d in dist_near_center])
+        probs = [d / sum_dist for d in dist_near_center]
         cum_probs = [sum(probs[:i+1]) for i in range(len(P))]
         coin = random.random()
         cum_probs_minus_coin = [abs(cum_probs[j]-coin) for j in range(len(P))]
