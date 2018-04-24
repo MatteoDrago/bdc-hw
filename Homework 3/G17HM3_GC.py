@@ -104,8 +104,8 @@ def kmeansObj(P, C):
 vector_list = readVectorsSeq('test-datasets/vecs-50-10000.txt')
 
 # Get the Parameters k and k1 from the User
-k = input('Digit k:')
-k1 = input('Digit k1:')
+k = int(input('Digit k:'))
+k1 = int(input('Digit k1:'))
 print()
 
 # Get K-Center Time Performance
