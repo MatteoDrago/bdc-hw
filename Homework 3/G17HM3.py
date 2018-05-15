@@ -1,6 +1,7 @@
 # Import Packages
 from pyspark import SparkConf, SparkContext
 from pyspark.ml.linalg import Vectors
+import numpy as np
 import random
 import time
 
@@ -18,10 +19,8 @@ def readVectorsSeq(filename):
 
 # K-Center
 def kcenter(P, k):
-    P_minus_S = [p for p in P]
     idx_rnd = random.randint(0, len(P)-1)
     S = [P[idx_rnd]]
-    P_minus_S.pop(idx_rnd)
     related_center_idx = [idx_rnd for i in range(len(P))]
     dist_near_center = [Vectors.squared_distance(P[i], S[0]) for i in range(len(P))]
 
@@ -29,7 +28,6 @@ def kcenter(P, k):
         new_center_idx = max(enumerate(dist_near_center), key=lambda x: x[1])[0] # argmax operation
 
         S.append(P[new_center_idx])
-        P_minus_S.remove(P[new_center_idx])
 
         for j in range(len(P)):
             if j != new_center_idx:
@@ -44,36 +42,23 @@ def kcenter(P, k):
 
 # K-Means++
 def kmeansPP(P, k):
-    P_minus_S = [p for p in P]
     idx_rnd = random.randint(0, len(P)-1)
     S = [P[idx_rnd]]
-    P_minus_S.pop(idx_rnd)
-    related_center_idx = [idx_rnd for i in range(len(P))]
     dist_near_center = [Vectors.squared_distance(P[i], S[0]) for i in range(len(P))]
 
-    for i in range(k-1):    
-        sum_dist = sum([d for d in dist_near_center])
-        probs = [d / sum_dist for d in dist_near_center]
-        cum_probs = [sum(probs[:i+1]) for i in range(len(P))]
-        coin = random.random()
-        cum_probs_minus_coin = [abs(cum_probs[j]-coin) for j in range(len(P))]
-        new_center_idx = min(enumerate(cum_probs_minus_coin), key=lambda x: x[1])[0] # argmin operation
+    for i in range(k-1):
         
-        # Append the New Center
-        S.append(P[new_center_idx])
-        P_minus_S.remove(P[new_center_idx])
-        
-        # Update the Distances and the Clusters
+        weights = dist_near_center/np.sum(dist_near_center)
+        idx = np.random.choice(range(len(P)),p=weights)
+        S.append(P[idx])
+
         for j in range(len(P)):
-            if j != new_center_idx:
+            if j != idx:
                 dist = Vectors.squared_distance(P[j], S[-1])
                 if dist < dist_near_center[j]:
                     dist_near_center[j] = dist
-                    related_center_idx[j] = new_center_idx
             else:
-                dist_near_center[j] = 0
-                related_center_idx[j] = new_center_idx
-                
+                dist_near_center[j] = 0 # this assures that in dist_near_center we consider just distances of P minus S
     return S
 
 # K-Means Objective Function
@@ -104,14 +89,15 @@ def kmeansObj(P, C):
 vector_list = readVectorsSeq('test-datasets/vecs-50-10000.txt')
 
 # Get the Parameters k and k1 from the User
+print('Insert k and k1 such that k < k1.')
 k = int(input('Digit k:'))
 k1 = int(input('Digit k1:'))
 print()
 
 # Get K-Center Time Performance
-P = [p for p in vector_list]
+#P = [p for p in vector_list] # Copy the Points
 t0 = time.time()
-C_kcenter = kcenter(P, k)
+C_kcenter = kcenter(vector_list, k)
 t1 = time.time()
 
 # Print the Results
@@ -120,11 +106,11 @@ print('Elapsed Time :', t1-t0, 's')
 print()
 
 # Get k Centers from K-Means++
-P = [p for p in vector_list]
-C_kmeansPP = kmeansPP(P, k)
+#P = [p for p in vector_list]
+C_kmeansPP = kmeansPP(vector_list, k)
 
 # Get the Objective Function 
-obj = kmeansObj(P, C_kmeansPP)
+obj = kmeansObj(vector_list, C_kmeansPP)
 
 # Print the Results
 print('K-Center Result:')
@@ -132,9 +118,9 @@ print('Objective Function from K-Means++ with k :', obj)
 print()
 
 # Get k1 Centers from K-Center
-C_kcenter_1 = kcenter(P, k1)
+C_kcenter_1 = kcenter(vector_list, k1)
 C_kmeansPP_1 = kmeansPP(C_kcenter_1, k)
-obj_1 = kmeansObj(P, C_kmeansPP_1)
+obj_1 = kmeansObj(vector_list, C_kmeansPP_1)
 
 # Print the Results
 print('K-Center Result:')
