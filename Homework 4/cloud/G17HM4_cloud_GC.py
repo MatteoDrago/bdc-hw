@@ -5,7 +5,6 @@ import numpy as np
 import time
 import random
 import sys
-import matplotlib.pyplot as plt
 
 ########################################
 # Build the Functions
@@ -112,15 +111,15 @@ def measure(pointslist):
 ########################################
 
 # Spark Setup
-conf = SparkConf().setAppName('HW4').setMaster('local')
+conf = SparkConf().setAppName('HW4').setMaster('local[*]')
 sc = SparkContext(conf=conf)
 
 # Import the Dataset and Define the Variables
 datafile = 'test-datasets/vecs-50-10000.txt'
-k_min, k_max = 2, 10
-numBlocks_min, numBlocks_max = 2, 5
-k = [i for i in range(k_min, k_max+1)]
+numBlocks_min, numBlocks_max = 2, 20
+k = [2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
 numBlocks = [i for i in range(numBlocks_min, numBlocks_max+1)]
+k_min, k_max = np.min(k), np.max(k)
 
 inputrdd_list = [[[] for i in range(len(k))] for j in range(len(numBlocks))]
 results = [[[] for i in range(len(k))] for j in range(len(numBlocks))]
@@ -129,83 +128,21 @@ result_times = np.zeros((len(numBlocks), len(k)))
 objs = np.zeros((len(numBlocks), len(k)))
 
 for i in range(len(k)):
-    for j in range(len(numBlocks)):
-        inputrdd = sc.textFile(datafile)\
-                                .map(lambda row : Vectors.dense([float(num_str) for num_str in row.split(' ')]))\
-                                .repartition(numBlocks[j])\
-                                .cache()
-        inputrdd_list[j][i] = inputrdd
+	print('K =', k[i])
+	for j in range(len(numBlocks)):
+		inputrdd = sc.textFile(datafile)\
+								.map(lambda row : Vectors.dense([float(num_str) for num_str in row.split(' ')]))\
+								.repartition(numBlocks[j])\
+								.cache()
+		inputrdd_list[j][i] = inputrdd
 
         # Computations                        
-        results[j][i], coreset_times[j,i], result_times[j,i] = runMapReduce(inputrdd, k[i], numBlocks[j])
-        objs[j,i] = measure(results[j][i])
-
-# Plots
-plt.figure(figsize=(17, 3))
-interpolation = 'bilinear'
-
-# Objective Function Plot
-plt.subplot(1, 3, 1)
-plt.title('Objective Function', fontweight='bold')
-plt.imshow(objs, interpolation=interpolation, origin='lower')
-plt.colorbar()
-plt.xticks(range(len(k)), range(k_min, k_max+1))
-plt.yticks(range(len(numBlocks)), range(numBlocks_min, numBlocks_max+1))
-plt.xlabel('K', fontweight='bold')
-plt.ylabel('Number of Blocks', fontweight='bold')
-
-# Coreset Time Plot
-plt.subplot(1, 3, 2)
-plt.title('Coreset Time [s]', fontweight='bold')
-plt.imshow(coreset_times, interpolation=interpolation, origin='lower')
-plt.colorbar()
-plt.xticks(range(len(k)), range(k_min, k_max+1))
-plt.yticks(range(len(numBlocks)), range(numBlocks_min, numBlocks_max+1))
-plt.xlabel('K', fontweight='bold')
-plt.ylabel('Number of Blocks', fontweight='bold')
-
-# Result Time Plot
-plt.subplot(1, 3, 3)
-plt.title('Result Time [s]', fontweight='bold')
-plt.imshow(result_times, interpolation=interpolation, origin='lower')
-plt.colorbar()
-plt.xticks(range(len(k)), range(k_min, k_max+1))
-plt.yticks(range(len(numBlocks)), range(numBlocks_min, numBlocks_max+1))
-plt.xlabel('K', fontweight='bold')
-plt.ylabel('Number of Blocks', fontweight='bold')
-
-plt.show()
-
-numBlocks_list = [i for i in range(numBlocks_min, numBlocks_max+1)]
-k_list = [i for i in range(k_min, k_max+1)]
-
-plt.figure(figsize=(17,3))
-
-# Objective Function Plot
-plt.subplot(1, 3, 1)
-for i in range(len(numBlocks)):
-    plt.plot(k_list, objs[i,:], label='numBlock='+str(numBlocks_list[i]))
-plt.legend(loc=1, prop={'size':8})
-plt.grid(True)
-plt.xlabel('K', fontweight='bold')
-plt.ylabel('Objective Functions', fontweight='bold')
-
-# Coreset Time Plot
-plt.subplot(1, 3, 2)
-for i in range(len(numBlocks)):
-    plt.plot(k_list, coreset_times[i,:], label='numBlock='+str(numBlocks_list[i]))
-plt.legend(loc=1, prop={'size':8})
-plt.grid(True)
-plt.xlabel('K', fontweight='bold')
-plt.ylabel('Coreset Time [s]', fontweight='bold')
-
-# Result Time Plot
-plt.subplot(1, 3, 3)
-for i in range(len(numBlocks)):
-    plt.plot(k_list, result_times[i,:], label='numBlock='+str(numBlocks_list[i]))
-plt.legend(loc=2, prop={'size':8})
-plt.grid(True)
-plt.xlabel('K', fontweight='bold')
-plt.ylabel('Result Time [s]', fontweight='bold')
-
-plt.show()
+		results[j][i], coreset_times[j,i], result_times[j,i] = runMapReduce(inputrdd, k[i], numBlocks[j])
+		objs[j,i] = measure(results[j][i])
+        
+# Saving Useful Files
+np.save('out/coreset_times', coreset_times)
+np.save('out/result_times', result_times)
+np.save('out/objs', objs)
+np.save('out/k', k)
+np.save('out/numBlocks', numBlocks)
