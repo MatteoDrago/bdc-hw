@@ -116,8 +116,8 @@ sc = SparkContext(conf=conf)
 
 # Import the Dataset and Define the Variables
 datafile = 'test-datasets/vecs-50-10000.txt'
-numBlocks_min, numBlocks_max = 2, 20
-k = [2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
+numBlocks_min, numBlocks_max = 2, 6
+k = [i for i in range(2, 100)]
 numBlocks = [i for i in range(numBlocks_min, numBlocks_max+1)]
 k_min, k_max = np.min(k), np.max(k)
 
