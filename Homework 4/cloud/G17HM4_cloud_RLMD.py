@@ -145,8 +145,8 @@ for i in range(len(k)):
 		objs[j,i] = measure(results[j][i])
         
 # Saving Useful Files
-np.save('out/coreset_times', coreset_times)
-np.save('out/result_times', result_times)
-np.save('out/objs', objs)
-np.save('out/k', k)
-np.save('out/numBlocks', numBlocks)
+np.save('out/RLMD/coreset_times', coreset_times)
+np.save('out/RLMD/result_times', result_times)
+np.save('out/RLMD/objs', objs)
+np.save('out/RLMD/k', k)
+np.save('out/RLMD/numBlocks', numBlocks)
