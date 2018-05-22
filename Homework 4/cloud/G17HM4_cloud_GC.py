@@ -115,7 +115,7 @@ conf = SparkConf().setAppName('HW4').setMaster('local[*]')
 sc = SparkContext(conf=conf)
 
 # Import the Dataset and Define the Variables
-datafile = 'test-datasets/vecs-50-10000.txt'
+datafile = sys.argv[-1]
 numBlocks_min, numBlocks_max = 2, 6
 k = [i for i in range(2, 100)]
 numBlocks = [i for i in range(numBlocks_min, numBlocks_max+1)]
@@ -141,8 +141,8 @@ for i in range(len(k)):
 		objs[j,i] = measure(results[j][i])
         
 # Saving Useful Files
-np.save('out/coreset_times', coreset_times)
-np.save('out/result_times', result_times)
-np.save('out/objs', objs)
-np.save('out/k', k)
-np.save('out/numBlocks', numBlocks)
+np.save('coreset_times', coreset_times)
+np.save('result_times', result_times)
+np.save('objs', objs)
+np.save('k', k)
+np.save('numBlocks', numBlocks)
