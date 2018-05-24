@@ -3,11 +3,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # Load Files
-coreset_times = np.load('out/coreset_times.npy')
-result_times = np.load('out/result_times.npy')
-objs = np.load('out/objs.npy')
-k = np.load('out/k.npy')
-numBlocks = np.load('out/numBlocks.npy')
+coreset_times = np.load('out/GC/coreset_times.npy')
+result_times = np.load('out/GC/result_times.npy')
+objs = np.load('out/GC/objs.npy')
+k = np.load('out/GC/k.npy')
+numBlocks = np.load('out/GC/numBlocks.npy')
 
 ########################################
 # Plots
@@ -51,7 +51,7 @@ plt.xlabel('K', fontweight='bold')
 plt.ylabel('Number of Blocks', fontweight='bold')
 plt.subplots_adjust(left=0.125, bottom=0.1, right=0.9, top=0.9,
                 wspace=0.2, hspace=0.4)
-plt.savefig('plots/1.eps')
+plt.savefig('plots/GC/1.eps')
 plt.show()
 
 numBlocks_list = [i for i in range(np.min(numBlocks), np.max(numBlocks)+1)]
@@ -97,5 +97,5 @@ plt.xlabel('K', fontweight='bold')
 plt.ylabel('Result Time [s]', fontweight='bold')
 plt.subplots_adjust(left=0.125, bottom=0.1, right=0.9, top=0.9,
                 wspace=0.2, hspace=0.4)
-plt.savefig('plots/2.eps')
+plt.savefig('plots/GC/2.eps')
 plt.show()
