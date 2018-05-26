@@ -127,6 +127,9 @@ coreset_times = np.zeros((len(numBlocks), len(k)))
 result_times = np.zeros((len(numBlocks), len(k)))
 objs = np.zeros((len(numBlocks), len(k)))
 
+np.save('out/GC/k', k)
+np.save('out/GC/numBlocks', numBlocks)
+
 for i in range(len(k)):
 	print('K =', k[i])
 	for j in range(len(numBlocks)):
@@ -139,10 +142,9 @@ for i in range(len(k)):
         # Computations                        
 		results[j][i], coreset_times[j,i], result_times[j,i] = runMapReduce(inputrdd, k[i], numBlocks[j])
 		objs[j,i] = measure(results[j][i])
+
+        # Saving Useful Files
+        np.save('out/GC/coreset_times/coreset_times_'+str(j)+'_'+str(i), coreset_times[j,i])
+        np.save('out/GC/result_times/result_times_'+str(j)+'_'+str(i), result_times[j,i])
+        np.save('out/GC/objs/objs_'+str(j)+'_'+str(i), objs[j,i])
         
-# Saving Useful Files
-np.save('coreset_times', coreset_times)
-np.save('result_times', result_times)
-np.save('objs', objs)
-np.save('k', k)
-np.save('numBlocks', numBlocks)
