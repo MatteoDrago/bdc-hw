@@ -114,37 +114,46 @@ def measure(pointslist):
 conf = SparkConf().setAppName('HW4').setMaster('local[*]')
 sc = SparkContext(conf=conf)
 
-# Import the Dataset and Define the Variables
+# Import the Dataset
 datafile = sys.argv[-1]
-numBlocks_min, numBlocks_max = 2, 6
-k = [i for i in range(2, 100)]
-numBlocks = [i for i in range(numBlocks_min, numBlocks_max+1)]
+k = [i for i in range(2,20)]
+k[0] = 2
+numBlocks = [i for i in range(1,20)]
+numBlocks[0] = 1
 k_min, k_max = np.min(k), np.max(k)
+numBlocks_min, numBlocks_max = np.min(numBlocks), np.max(numBlocks)
 
+# Print Info of the Grid Search
+print()
+print('Grid Search:')
+print('- numBlocks Search:', numBlocks)
+print('- K Search:', k)
+print()
+
+# Define Variables
 inputrdd_list = [[[] for i in range(len(k))] for j in range(len(numBlocks))]
-results = [[[] for i in range(len(k))] for j in range(len(numBlocks))]
 coreset_times = np.zeros((len(numBlocks), len(k)))
 result_times = np.zeros((len(numBlocks), len(k)))
 objs = np.zeros((len(numBlocks), len(k)))
 
-np.save('out/GC/k', k)
-np.save('out/GC/numBlocks', numBlocks)
-
+# Compute Variables
 for i in range(len(k)):
-	print('K =', k[i])
-	for j in range(len(numBlocks)):
-		inputrdd = sc.textFile(datafile)\
-								.map(lambda row : Vectors.dense([float(num_str) for num_str in row.split(' ')]))\
-								.repartition(numBlocks[j])\
-								.cache()
-		inputrdd_list[j][i] = inputrdd
+    print('K =', k[i])
+    for j in range(len(numBlocks)):
+        print('numBlocks =', numBlocks[j])
+        inputrdd = sc.textFile(datafile)\
+                                .map(lambda row : Vectors.dense([float(num_str) for num_str in row.split(' ')]))\
+                                .repartition(numBlocks[j])\
+                                .cache()
 
         # Computations                        
-		results[j][i], coreset_times[j,i], result_times[j,i] = runMapReduce(inputrdd, k[i], numBlocks[j])
-		objs[j,i] = measure(results[j][i])
+        results, coreset_times[j,i], result_times[j,i] = runMapReduce(inputrdd, k[i], numBlocks[j])
+        objs[j,i] = measure(results)
 
-        # Saving Useful Files
-        np.save('out/GC/coreset_times/coreset_times_'+str(j)+'_'+str(i), coreset_times[j,i])
-        np.save('out/GC/result_times/result_times_'+str(j)+'_'+str(i), result_times[j,i])
-        np.save('out/GC/objs/objs_'+str(j)+'_'+str(i), objs[j,i])
+# Saving Metric Files
+np.save('out/GC/k', k)
+np.save('out/GC/numBlocks', numBlocks)
+np.save('out/GC/coreset_times', coreset_times)
+np.save('out/GC/result_times', result_times)
+np.save('out/GC/objs', objs)
         
