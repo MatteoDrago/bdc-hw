@@ -51,7 +51,7 @@ plt.xlabel('K', fontweight='bold')
 plt.ylabel('Number of Blocks', fontweight='bold')
 plt.subplots_adjust(left=0.125, bottom=0.1, right=0.9, top=0.9,
                 wspace=0.2, hspace=0.4)
-plt.savefig('plots/GC/1.eps')
+plt.savefig('plots/Sektor/1.eps')
 plt.show()
 
 numBlocks_list = [i for i in range(np.min(numBlocks), np.max(numBlocks)+1)]
@@ -97,5 +97,5 @@ plt.xlabel('K', fontweight='bold')
 plt.ylabel('Result Time [s]', fontweight='bold')
 plt.subplots_adjust(left=0.125, bottom=0.1, right=0.9, top=0.9,
                 wspace=0.2, hspace=0.4)
-plt.savefig('plots/GC/2.eps')
+plt.savefig('plots/Sektor/2.eps')
 plt.show()
