@@ -76,13 +76,13 @@ def runSequential(points, k):
 def runMapReduce(pointsrdd, k, numBlocks):
     
     # Partitioning
-    t0 = time.time()
     blocks = pointsrdd.glom()
     
     # Extract k-Points using Farthest-First Traversal algorithm
     centers = blocks.map(lambda p: farthest_first_traversal(p,k))
     
     # Gathering the Vectors
+    t0 = time.time()
     coreset = [y for c in centers.collect() for y in c]
     t1 = time.time()
     coreset_time = t1-t0
@@ -118,10 +118,9 @@ sc = SparkContext(conf=conf)
 datafile = sys.argv[-1]
 k = [i for i in range(2,6)]
 k[0] = 2
-numBlocks = [i for i in range(1,6)]
-numBlocks[0] = 1
+numBlocks = [18, 36, 54, 72, 90]
 k_min, k_max = np.min(k), np.max(k)
-numBlocks_min, numBlocks_max = np.min(numBlocks), np.max(numBlocks)
+numBlocks_min, numBlocks_max = np.argmin(numBlocks), np.argmax(numBlocks) # 0 and 4
 
 # Print Info of the Grid Search
 print()
@@ -140,8 +139,8 @@ inputrdd = sc.textFile(datafile).map(lambda row : Vectors.dense([float(num_str) 
 
 # Compute Variables
 for j in range(len(numBlocks)):
-    inputrdd.repartition(numBlocks[j])
-            #.cache()
+    inputrdd.repartition(numBlocks[j]) \
+            .cache()
     for i in range(len(k)):
         print('numBlocks =', numBlocks[j], ', K =', k[i])
 
