@@ -111,14 +111,14 @@ def measure(pointslist):
 ########################################
 
 # Spark Setup
-conf = SparkConf().setAppName('HW4').setMaster('local[*]')
+conf = SparkConf().setAppName('HW4').setMaster('local')
 sc = SparkContext(conf=conf)
 
 # Import the Dataset
 datafile = sys.argv[-1]
-k = [i for i in range(2,20)]
+k = [i for i in range(2,6)]
 k[0] = 2
-numBlocks = [i for i in range(1,20)]
+numBlocks = [i for i in range(1,6)]
 numBlocks[0] = 1
 k_min, k_max = np.min(k), np.max(k)
 numBlocks_min, numBlocks_max = np.min(numBlocks), np.max(numBlocks)
@@ -138,13 +138,12 @@ objs = np.zeros((len(numBlocks), len(k)))
 
 # Compute Variables
 for i in range(len(k)):
-    print('K =', k[i])
     for j in range(len(numBlocks)):
-        print('numBlocks =', numBlocks[j])
+        print('K =', k[i], 'numBlocks =', numBlocks[j])
         inputrdd = sc.textFile(datafile)\
                                 .map(lambda row : Vectors.dense([float(num_str) for num_str in row.split(' ')]))\
-                                .repartition(numBlocks[j])\
-                                .cache()
+                                .repartition(numBlocks[j])#\
+                                #.cache()
 
         # Computations                        
         results, coreset_times[j,i], result_times[j,i] = runMapReduce(inputrdd, k[i], numBlocks[j])
