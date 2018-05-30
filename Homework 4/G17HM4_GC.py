@@ -76,13 +76,13 @@ def runSequential(points, k):
 def runMapReduce(pointsrdd, k, numBlocks):
     
     # Partitioning
-    t0 = time.time()
     blocks = pointsrdd.glom()
     
     # Extract k-Points using Farthest-First Traversal algorithm
     centers = blocks.map(lambda p: farthest_first_traversal(p,k))
     
     # Gathering the Vectors
+    t0 = time.time()
     coreset = [y for c in centers.collect() for y in c]
     t1 = time.time()
     coreset_time = t1-t0
