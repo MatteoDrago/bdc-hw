@@ -136,14 +136,14 @@ coreset_times = np.zeros((len(numBlocks), len(k)))
 result_times = np.zeros((len(numBlocks), len(k)))
 objs = np.zeros((len(numBlocks), len(k)))
 
+inputrdd = sc.textFile(datafile).map(lambda row : Vectors.dense([float(num_str) for num_str in row.split(' ')]))
+
 # Compute Variables
-for i in range(len(k)):
-    for j in range(len(numBlocks)):
+for j in range(len(numBlocks)):
+    inputrdd.repartition(numBlocks[j])\
+            #.cache()
+    for i in range(len(k)):
         print('K =', k[i], 'numBlocks =', numBlocks[j])
-        inputrdd = sc.textFile(datafile)\
-                                .map(lambda row : Vectors.dense([float(num_str) for num_str in row.split(' ')]))\
-                                .repartition(numBlocks[j])#\
-                                #.cache()
 
         # Computations                        
         results, coreset_times[j,i], result_times[j,i] = runMapReduce(inputrdd, k[i], numBlocks[j])
